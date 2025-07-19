@@ -57,7 +57,10 @@ body {
     min-height: 100vh;
     color: var(--text-primary);
     line-height: 1.6;
+    /* Version indicator - if you see this, the new CSS is loaded */
 }
+
+/* NEW DESIGN LOADED - V2.0 */
 
 .app-background {
     min-height: 100vh;
