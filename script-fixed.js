@@ -258,6 +258,10 @@ class UIManager {
         this.addBtn = document.getElementById('addBtn');
         this.taskList = document.getElementById('taskList');
         this.filterBtns = document.querySelectorAll('.filter-btn');
+        
+        // Set current date as default value
+        const today = new Date().toISOString().split('T')[0];
+        this.dueDateInput.value = today;
     }
 
     /**
@@ -285,32 +289,39 @@ class UIManager {
      */
     renderTasks(tasks) {
         this.taskList.innerHTML = '';
+        const emptyState = document.getElementById('emptyState');
 
-        tasks.forEach(task => {
-            const li = document.createElement('li');
-            li.className = `task-item ${task.completed ? 'completed' : ''}`;
+        if (tasks.length === 0) {
+            emptyState.classList.remove('hidden');
+        } else {
+            emptyState.classList.add('hidden');
             
-            const dueDateHtml = task.dueDate ? Utils.formatDueDate(task.dueDate) : '';
-            
-            li.innerHTML = `
-                <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
-                       onchange="todoApp.toggleComplete(${task.id})">
-                <div class="task-content">
-                    <span class="task-text">${Utils.escapeHtml(task.text)}</span>
-                    <input type="text" class="task-edit-input" value="${Utils.escapeHtml(task.text)}">
-                    ${dueDateHtml}
-                </div>
-                <div class="task-actions">
-                    <button class="edit-btn" onclick="todoApp.editTask(${task.id})">Edit</button>
-                    <button class="save-btn" onclick="todoApp.saveTask(${task.id})">Save</button>
-                    <button class="delete-btn" onclick="todoApp.deleteTask(${task.id})">
-                        Delete
-                    </button>
-                </div>
-            `;
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = `task-item ${task.completed ? 'completed' : ''}`;
+                
+                const dueDateHtml = task.dueDate ? Utils.formatDueDate(task.dueDate) : '';
+                
+                li.innerHTML = `
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
+                           onchange="todoApp.toggleComplete(${task.id})">
+                    <div class="task-content">
+                        <span class="task-text">${Utils.escapeHtml(task.text)}</span>
+                        <input type="text" class="task-edit-input" value="${Utils.escapeHtml(task.text)}">
+                        ${dueDateHtml}
+                    </div>
+                    <div class="task-actions">
+                        <button class="edit-btn" onclick="todoApp.editTask(${task.id})">Edit</button>
+                        <button class="save-btn" onclick="todoApp.saveTask(${task.id})">Save</button>
+                        <button class="delete-btn" onclick="todoApp.deleteTask(${task.id})">
+                            Delete
+                        </button>
+                    </div>
+                `;
 
-            this.taskList.appendChild(li);
-        });
+                this.taskList.appendChild(li);
+            });
+        }
     }
 
     /**
