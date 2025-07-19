@@ -350,6 +350,24 @@ class UIManager {
     }
 
     /**
+     * Updates the task counters in the filter buttons
+     * @param {Array} allTasks - Array of all tasks
+     */
+    updateTaskCounters(allTasks) {
+        const allCount = allTasks.length;
+        const activeCount = allTasks.filter(task => !task.completed).length;
+        const completedCount = allTasks.filter(task => task.completed).length;
+
+        const allCountElement = document.getElementById('allCount');
+        const activeCountElement = document.getElementById('activeCount');
+        const completedCountElement = document.getElementById('completedCount');
+
+        if (allCountElement) allCountElement.textContent = allCount;
+        if (activeCountElement) activeCountElement.textContent = activeCount;
+        if (completedCountElement) completedCountElement.textContent = completedCount;
+    }
+
+    /**
      * Shows the edit mode for a specific task
      * @param {number} taskId - ID of the task to edit
      */
@@ -549,8 +567,10 @@ class TodoApp {
     renderTasks() {
         const currentFilter = this.uiManager.getCurrentFilter();
         const filteredTasks = this.taskManager.getFilteredTasks(currentFilter);
+        const allTasks = this.taskManager.getTasks();
         
         this.uiManager.renderTasks(filteredTasks);
+        this.uiManager.updateTaskCounters(allTasks);
     }
 
     /**
